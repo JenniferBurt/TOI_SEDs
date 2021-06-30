@@ -2,13 +2,13 @@ from astroARIADNE.star import Star
 from astroARIADNE.fitter import Fitter
 from astroARIADNE.plotter import SEDPlotter
 import pandas as pd
+import numpy as np
 
 
 toi_list = pd.read_csv('Cycle3_TOI_List.csv')
 
-###################################################################
-############### Definitions for string syntax #####################
-###################################################################
+
+#Definition for string syntax
 
 tick = "'"
 
@@ -29,43 +29,43 @@ for i in range(len(toi_list)):
     #checking for priors
 
     #teff
-    if toi_list['Teff'][i] == nan:  #if star has no priors, set to default
+    if np.isnan(toi_list['Teff'][i]) == True:  #if star has no priors, set to default
         teff_default_str = tick + 'teff' + tick + ': (' + tick + 'default' + tick + ')'
     else:
         teff= toi_list['Teff'][i]
         teff_unc= toi_list['e_Teff'][i]
 
-        teff_default_str = tick + 'teff' + tick + ': (' + tick + 'normal' + tick + ', ' + teff + ', ' + teff_unc + ')'
+        teff_default_str = tick + 'teff' + tick + ': (' + tick + 'normal' + tick + ', ' + 'teff' + ', ' + 'teff_unc' + ')'
     
 
     #logg
-    if toi_list['logg'][i] == nan:
+    if np.isnan(toi_list['logg'][i]) == True:
         logg_default_str = tick + 'logg' + tick + ': (' + tick + 'default' + tick + ')'
     else:
         logg = toi_list['logg'][i]
         logg_unc = toi_list['e_logg'][i]
 
-       logg_default_str = tick + 'logg' + tick + ': (' + tick + 'normal' + tick + ', ' + logg + ', ' + logg_unc + ')' 
+        logg_default_str = tick + 'logg' + tick + ': (' + tick + 'normal' + tick + ', ' + 'logg' + ', ' + 'logg_unc' + ')' 
 
 
     #Fe/H
-    if toi_list['metallicity'][i] == nan:
+    if np.isnan(toi_list['metallicity'][i]) == True:
         feh_default_str = tick + 'z' + tick + ': (' + tick + 'default' + tick + ')'
     else:
         feh= toi_list['metallicity'][i]
         feh_unc= toi_list['e_metallicity'][i]
 
-        feh_default_str = tick + 'z' + tick + ': (' + tick + 'normal' + tick + ', ' + feh + ', ' + feh_unc + ')'
+        feh_default_str = tick + 'z' + tick + ': (' + tick + 'normal' + tick + ', ' + 'feh' + ', ' + 'feh_unc' + ')'
 
 
     #Av
-    if toi_list['av'][i] == nan:
+    if np.isnan(toi_list['av'][i]) == True:
         av_default_str = tick + 'Av' + tick + ': (' + tick + 'default' + tick + ')'
     else:
         av = toi_list['av'][i]
         av_unc = toi_list['e_av'][i]
 
-        av_default_str = tick + 'Av' + tick + ': (' + tick + 'normal' + tick + ', ' + av + ', ' + av_unc + ')'
+        av_default_str = tick + 'Av' + tick + ': (' + tick + 'normal' + tick + ', ' + 'av' + ', ' + 'av_unc' + ')'
     
 
     ###############################################################
