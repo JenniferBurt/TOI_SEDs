@@ -52,7 +52,7 @@ f.bma = True
 f.models = models
 f.n_samples = 100000
 
-f.prior_setup = {'teff': ('normal', teff, teff_unc),'logg': ('default'),'z': ('normal', feh, feh_unc),'dist': ('default'),'rad': ('default'),'Av': ('norma', av, av_unc)}
+f.prior_setup = {'teff': ('normal', teff, teff_unc),'logg': ('default'),'z': ('normal', feh, feh_unc),'dist': ('default'),'rad': ('default'),'Av': ('normal', av, av_unc)}
 
 f.initialize()
 f.fit_bma()
