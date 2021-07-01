@@ -5,7 +5,7 @@ import pandas as pd
 import numpy as np
 
 
-toi_list = pd.read_csv('Cycle3_TOI_List.csv')
+toi_list = pd.read_csv('../TargetListOverview/Cycle3_TOI_List.csv')
 
 
 #Definition for string syntax
@@ -18,7 +18,7 @@ tick = "'"
 ## The lines below will need to be changed on a per-target basis ##
 ###################################################################
 
-for i in range(len(toi_list)):
+for i in range(0,len(toi_list)):
     word = toi_list['TOI_Number'][i]
     starname = 'TOI-'+ word.split('.')[0]
     ra = toi_list['RA'][i]
@@ -33,7 +33,7 @@ for i in range(len(toi_list)):
     if np.isnan(toi_list['Teff'][i]) == True:  #if star has no priors, set to default
         my_dict["teff"].append("default")
     else:
-        teff= toi_list['Teff'][i]      #if info is listed on csv, use it
+        teff= toi_list['Teff'][i]      #if info is listed on csv, use those values as priors
         teff_unc= toi_list['e_Teff'][i]
 
         my_dict["teff"].append('normal')
@@ -82,12 +82,12 @@ for i in range(len(toi_list)):
     ###############################################################
 
     out_folder='../ARIADNE_FitResults/'+starname
-    in_file = out_folder + 'BMA.pkl'
-    plots_out_folder=out_folder+'plots/'
+    in_file = out_folder + '/BMA.pkl'
+    plots_out_folder=out_folder+'/plots/'
 
     s = Star(starname, ra, dec, g_id=gaia_id)
 
-    #s.estimate_logg()
+    s.estimate_logg()
 
     engine = 'dynesty'
     nlive = 500
