@@ -27,45 +27,54 @@ for i in range(len(toi_list)):
 
 
     #checking for priors
+    my_dict = {"teff": [],"logg": [],"z": [], "dist": 'default', "rad": 'default', 'Av': []}
 
     #teff
     if np.isnan(toi_list['Teff'][i]) == True:  #if star has no priors, set to default
-        teff_default_str = tick + 'teff' + tick + ': (' + tick + 'default' + tick + ')'
+        my_dict["teff"].append("default")
     else:
-        teff= toi_list['Teff'][i]
+        teff= toi_list['Teff'][i]      #if info is listed on csv, use it
         teff_unc= toi_list['e_Teff'][i]
 
-        teff_default_str = tick + 'teff' + tick + ': (' + tick + 'normal' + tick + ', ' + 'teff' + ', ' + 'teff_unc' + ')'
+        my_dict["teff"].append('normal')
+        my_dict["teff"].append(teff)
+        my_dict["teff"].append(teff_unc)
     
 
     #logg
     if np.isnan(toi_list['logg'][i]) == True:
-        logg_default_str = tick + 'logg' + tick + ': (' + tick + 'default' + tick + ')'
+        my_dict["logg"].append('default')
     else:
         logg = toi_list['logg'][i]
         logg_unc = toi_list['e_logg'][i]
 
-        logg_default_str = tick + 'logg' + tick + ': (' + tick + 'normal' + tick + ', ' + 'logg' + ', ' + 'logg_unc' + ')' 
+        my_dict["logg"].append('normal')
+        my_dict["logg"].append(logg)
+        my_dict["logg"].append(logg_unc)
 
 
     #Fe/H
     if np.isnan(toi_list['metallicity'][i]) == True:
-        feh_default_str = tick + 'z' + tick + ': (' + tick + 'default' + tick + ')'
+        my_dict["z"].append('default')
     else:
         feh= toi_list['metallicity'][i]
         feh_unc= toi_list['e_metallicity'][i]
 
-        feh_default_str = tick + 'z' + tick + ': (' + tick + 'normal' + tick + ', ' + 'feh' + ', ' + 'feh_unc' + ')'
+        my_dict["z"].append('normal')
+        my_dict["z"].append(feh)
+        my_dict["z"].append(feh_unc)
 
 
     #Av
     if np.isnan(toi_list['av'][i]) == True:
-        av_default_str = tick + 'Av' + tick + ': (' + tick + 'default' + tick + ')'
+        my_dict['Av'].append('default')
     else:
         av = toi_list['av'][i]
         av_unc = toi_list['e_av'][i]
 
-        av_default_str = tick + 'Av' + tick + ': (' + tick + 'normal' + tick + ', ' + 'av' + ', ' + 'av_unc' + ')'
+        my_dict["Av"].append('normal')
+        my_dict["Av"].append(av)
+        my_dict["Av"].append(av_unc)
     
 
     ###############################################################
@@ -102,7 +111,7 @@ for i in range(len(toi_list)):
     f.models = models
     f.n_samples = 100000
 
-    f.prior_setup = {teff_default_str,logg_default_str,feh_default_str,'dist': ('default'),'rad': ('default'),av_default_str}
+    f.prior_setup = my_dict
 
     f.initialize()
     f.fit_bma()
