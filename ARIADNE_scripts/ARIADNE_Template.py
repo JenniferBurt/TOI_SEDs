@@ -22,7 +22,7 @@ av_unc=0.01
 ##         From here on, everything should be static         ##
 ###############################################################
 
-out_folder='../ARIADNE_FitResults/'+starname
+out_folder='../ARIADNE_FitResults/'+starname+'/'
 in_file = out_folder + 'BMA.pkl'
 plots_out_folder=out_folder+'plots/'
 
