@@ -1,5 +1,5 @@
 from astroARIADNE.star import Star
-from astroARIADNE.fitter import Fitter
+from astroARIADNE.fitter import Fitter, multinest_log_like
 from astroARIADNE.plotter import SEDPlotter
 import pandas as pd
 import numpy as np
@@ -26,62 +26,74 @@ for i in range(0,len(toi_list)):
     gaia_id = toi_list['GAIA'][i]
 
 
-    #checking for priors
-    my_dict = {"teff": [],"logg": [],"z": [], "dist": 'default', "rad": 'default', 'Av': []}
+    #checking for priors by building dictionary one parameter at a time
+    my_dict = {}
 
     #teff
     if np.isnan(toi_list['Teff'][i]) == True:  #if star has no priors, set to default
-        my_dict["teff"].append("default")
+        teff_dict = {'teff': 'default'}
+        my_dict.update(teff_dict)  #update dictionary with teff info
     else:
         teff= toi_list['Teff'][i]      #if info is listed on csv, use those values as priors
         teff_unc= toi_list['e_Teff'][i]
 
-        my_dict["teff"].append('normal')
-        my_dict["teff"].append(teff)
-        my_dict["teff"].append(teff_unc)
+        teff_dict = {'teff': ('normal', teff, teff_unc)}
+        my_dict.update(teff_dict)
     
 
     #logg
     if np.isnan(toi_list['logg'][i]) == True:
-        my_dict["logg"].append('default')
+        logg_dict = {'logg': 'default'}
+        my_dict.update(logg_dict)
+
     else:
         logg = toi_list['logg'][i]
         logg_unc = toi_list['e_logg'][i]
 
-        my_dict["logg"].append('normal')
-        my_dict["logg"].append(logg)
-        my_dict["logg"].append(logg_unc)
+        logg_dict = {'logg': ('normal', logg, logg_unc)}
+        my_dict.update(logg_dict)
 
 
     #Fe/H
     if np.isnan(toi_list['metallicity'][i]) == True:
-        my_dict["z"].append('default')
+        feh_dict = {'z': 'default'}
+        my_dict.update(feh_dict)
+
     else:
         feh= toi_list['metallicity'][i]
         feh_unc= toi_list['e_metallicity'][i]
 
-        my_dict["z"].append('normal')
-        my_dict["z"].append(feh)
-        my_dict["z"].append(feh_unc)
+        feh_dict = {'z': ('normal', feh, feh_unc)}
+        my_dict.update(feh_dict)
 
 
-    #Av
+    #distance - no priors
+    dist_dict = {'dist': 'default'}
+    my_dict.update(dist_dict)
+
+    #radius - no priors
+    rad_dict = {'rad': 'default'}
+    my_dict.update(rad_dict)
+
+
+    #Av - priors from Stilism
     if np.isnan(toi_list['av'][i]) == True:
-        my_dict['Av'].append('default')
+        av_dict = {'Av': 'default'}
+        my_dict.update(av_dict)
+
     else:
         av = toi_list['av'][i]
         av_unc = toi_list['e_av'][i]
 
-        my_dict["Av"].append('normal')
-        my_dict["Av"].append(av)
-        my_dict["Av"].append(av_unc)
+        av_dict = {'Av': ('normal', av, av_unc)}
+        my_dict.update(av_dict)
     
 
     ###############################################################
     ##         From here on, everything should be static         ##
     ###############################################################
 
-    out_folder='../ARIADNE_FitResults/'+starname+'/'
+    out_folder='../ARIADNE_FitResults/'+starname
     in_file = out_folder + '/BMA.pkl'
     plots_out_folder=out_folder+'/plots/'
 

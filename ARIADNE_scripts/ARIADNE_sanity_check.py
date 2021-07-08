@@ -5,7 +5,7 @@ import pandas as pd
 import numpy as np
 
 
-star_list = pd.read_csv('../TargetListOverview/Boyajian_Star_List.csv')
+star_list = pd.read_csv('~/Documents/Github/TOI_SEDs/ARIADNE_scripts/Boyajian_Star_List.csv')
 
 
 #Definition for string syntax
@@ -18,7 +18,7 @@ tick = "'"
 ## The lines below will need to be changed on a per-target basis ##
 ###################################################################
 
-for i in range(0,len(star_list)):
+for i in range(1,len(star_list)):
     starname = star_list['ID'][i]
     ra = star_list['RA'][i]
     dec = star_list['Dec'][i]
@@ -26,54 +26,40 @@ for i in range(0,len(star_list)):
 
 
     #checking for priors
-    my_dict = {"teff": [],"logg": [],"z": [], "dist": 'default', "rad": 'default', 'Av': []}
+    my_dict = {}
 
     #teff
-    if np.isnan(star_list['Teff'][i]) == True:  #if star has no priors, set to default
-        my_dict["teff"].append("default")
-    else:
-        teff= star_list['Teff'][i]      #if info is listed on csv, use those values as priors
-        teff_unc= star_list['e_Teff'][i]
-
-        my_dict["teff"].append('normal')
-        my_dict["teff"].append(teff)
-        my_dict["teff"].append(teff_unc)
-    
+    teff_dict = {'teff': 'default'}
+    my_dict.update(teff_dict)
 
     #logg
-    if np.isnan(star_list['logg'][i]) == True:
-        my_dict["logg"].append('default')
-    else:
-        logg = star_list['logg'][i]
-        logg_unc = star_list['e_logg'][i]
+    logg_dict = {'logg': 'default'}
+    my_dict.update(logg_dict)
 
-        my_dict["logg"].append('normal')
-        my_dict["logg"].append(logg)
-        my_dict["logg"].append(logg_unc)
+    #feh
+    feh_dict = {'z': 'default'}
+    my_dict.update(feh_dict)
 
+    #dist
+    dist_dict = {'dist': 'default'}
+    my_dict.update(dist_dict)
 
-    #Fe/H
-    if np.isnan(star_list['metallicity'][i]) == True:
-        my_dict["z"].append('default')
-    else:
-        feh= star_list['metallicity'][i]
-        feh_unc= star_list['e_metallicity'][i]
-
-        my_dict["z"].append('normal')
-        my_dict["z"].append(feh)
-        my_dict["z"].append(feh_unc)
-
+    #rad
+    rad_dict = {'rad': 'default'}
+    my_dict.update(rad_dict)
 
     #Av
     if np.isnan(star_list['av'][i]) == True:
-        my_dict['Av'].append('default')
+        av_dict = {'Av': 'default'}
+        my_dict.update(av_dict)
     else:
         av = star_list['av'][i]
         av_unc = star_list['e_av'][i]
 
-        my_dict["Av"].append('normal')
-        my_dict["Av"].append(av)
-        my_dict["Av"].append(av_unc)
+        av_dict = {'Av': ('normal', av, av_unc)}
+        my_dict.update(av_dict)
+
+        
     
 
     ###############################################################
