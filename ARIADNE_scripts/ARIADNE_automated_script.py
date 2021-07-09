@@ -5,22 +5,17 @@ import pandas as pd
 import numpy as np
 
 
+#read in cycle 3 TOI list containing star info
 toi_list = pd.read_csv('../TargetListOverview/Cycle3_TOI_List.csv')
-
-
-#Definition for string syntax
-
-tick = "'"
-
 
 
 ###################################################################
 ## The lines below will need to be changed on a per-target basis ##
 ###################################################################
 
-for i in range(0,len(toi_list)):
+for i in range(0,len(toi_list)):   #iterates through csv to run fit for each star
     word = toi_list['TOI_Number'][i]
-    starname = 'TOI-'+ word.split('.')[0]
+    starname = 'TOI-'+ word.split('.')[0]    #omits everything after the period (ex. TOI-2447.01 becomes TOI-2447)
     ra = toi_list['RA'][i]
     dec = toi_list['Dec'][i]
     gaia_id = toi_list['GAIA'][i]
@@ -31,7 +26,7 @@ for i in range(0,len(toi_list)):
 
     #teff
     if np.isnan(toi_list['Teff'][i]) == True:  #if star has no priors, set to default
-        teff_dict = {'teff': 'default'}
+        teff_dict = {'teff': ('default')}
         my_dict.update(teff_dict)  #update dictionary with teff info
     else:
         teff= toi_list['Teff'][i]      #if info is listed on csv, use those values as priors
@@ -43,7 +38,7 @@ for i in range(0,len(toi_list)):
 
     #logg
     if np.isnan(toi_list['logg'][i]) == True:
-        logg_dict = {'logg': 'default'}
+        logg_dict = {'logg': ('default')}
         my_dict.update(logg_dict)
 
     else:
@@ -56,7 +51,7 @@ for i in range(0,len(toi_list)):
 
     #Fe/H
     if np.isnan(toi_list['metallicity'][i]) == True:
-        feh_dict = {'z': 'default'}
+        feh_dict = {'z': ('default')}
         my_dict.update(feh_dict)
 
     else:
@@ -68,17 +63,17 @@ for i in range(0,len(toi_list)):
 
 
     #distance - no priors
-    dist_dict = {'dist': 'default'}
+    dist_dict = {'dist': ('default')}
     my_dict.update(dist_dict)
 
     #radius - no priors
-    rad_dict = {'rad': 'default'}
+    rad_dict = {'rad': ('default')}
     my_dict.update(rad_dict)
 
 
     #Av - priors from Stilism
     if np.isnan(toi_list['av'][i]) == True:
-        av_dict = {'Av': 'default'}
+        av_dict = {'Av': ('default')}
         my_dict.update(av_dict)
 
     else:
