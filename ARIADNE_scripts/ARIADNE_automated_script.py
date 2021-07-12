@@ -6,7 +6,7 @@ import numpy as np
 
 
 #read in cycle 3 TOI list containing star info
-toi_list = pd.read_csv('../TargetListOverview/Cycle3_TOI_List.csv')
+toi_list = pd.read_csv('../TargetListOverview/Cycle3_TOI_List.csv', dtype=dict(GAIA=str))
 
 
 ###################################################################
@@ -18,7 +18,9 @@ for i in range(0,len(toi_list)):   #iterates through csv to run fit for each sta
     starname = 'TOI-'+ word.split('.')[0]    #omits everything after the period (ex. TOI-2447.01 becomes TOI-2447)
     ra = toi_list['RA'][i]
     dec = toi_list['Dec'][i]
-    gaia_id = toi_list['GAIA'][i]
+
+    gaia_str = toi_list['GAIA'][i]  #gaia number must be read in as string to preserve all digits
+    gaia_id = int(gaia_str)    #convert string to integer for ARIADNE to read
 
 
     #checking for priors by building dictionary one parameter at a time
