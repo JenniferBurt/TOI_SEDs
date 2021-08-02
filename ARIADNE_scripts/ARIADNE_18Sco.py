@@ -24,9 +24,7 @@ plots_out_folder=out_folder+'plots/'
 
 s = Star(starname, ra, dec, g_id=gaia_id)
 
-#add 2MASS JK bands and WISE photometry
-#s.add_mag(4.667, .26, '2MASS_J') #mag, uncertainty, filter name
-#s.add_mag(4.186, 0.292, '2MASS_K')
+#add WISE photometry
 #s.add_mag(3.988, 0.234, 'WISE_RSR_W1') #1st and 2nd WISE bands
 #s.add_mag(3.642, 0.173, 'WISE_RSR_W2')
 
@@ -54,7 +52,7 @@ f.bma = True
 f.models = models
 f.n_samples = 100000
 
-f.prior_setup = {'teff': ('default'),'logg': ('default'),'z': ('default'),'dist': ('default'),'rad': ('default'),'Av': ('normal', av, av_unc)}
+f.prior_setup = {'teff': ('default'),'logg': ('default'),'z': ('default'),'dist': ('default'),'rad': ('default'),'Av': ('fixed', 0)}
 
 f.initialize()
 f.fit_bma()

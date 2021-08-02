@@ -31,7 +31,7 @@ s = Star(starname, ra, dec, g_id=gaia_id)
 s.estimate_logg()
 
 engine = 'dynesty'
-nlive = 500
+nlive = 150
 dlogz = 0.5
 bound = 'multi'
 sample = 'rwalk'

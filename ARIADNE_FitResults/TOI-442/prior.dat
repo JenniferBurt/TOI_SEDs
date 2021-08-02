@@ -1,0 +1,7 @@
+Parameter	Prior	Values
+teff	uniform	3000	7000
+logg	uniform	3.5	5.5
+z	uniform	-1	0.6
+dist	default
+rad	default
+Av	normal	0.0	0.04634

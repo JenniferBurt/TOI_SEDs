@@ -4,4 +4,4 @@ logg	default
 z	default
 dist	default
 rad	default
-Av	normal	0	0.04965
+Av	fixed	0
