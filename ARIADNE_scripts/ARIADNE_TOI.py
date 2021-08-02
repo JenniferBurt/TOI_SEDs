@@ -13,7 +13,7 @@ toi_list = pd.read_csv('Cycle3_TOI_List.csv', dtype=dict(GAIA=str))
 ## The lines below will need to be changed on a per-target basis ##
 ###################################################################
 
-for i in range(0,len(toi_list)):   #iterates through csv to run fit for each star
+for i in range(114,len(toi_list)):   #iterates through csv to run fit for each star
     word = toi_list['TOI_Number'][i]
     starname = 'TOI-'+ word.split('.')[0]    #omits everything after the period (ex. TOI-2447.01 becomes TOI-2447)
     ra = toi_list['RA'][i]
@@ -148,7 +148,7 @@ for i in range(0,len(toi_list)):   #iterates through csv to run fit for each sta
     s.estimate_logg()
 
     engine = 'dynesty'
-    nlive = 500
+    nlive = 150
     dlogz = 0.5
     bound = 'multi'
     sample = 'rwalk'
