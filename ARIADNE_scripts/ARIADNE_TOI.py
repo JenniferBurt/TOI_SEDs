@@ -3,6 +3,8 @@ from astroARIADNE.fitter import Fitter, multinest_log_like
 from astroARIADNE.plotter import SEDPlotter
 import pandas as pd
 import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib.ticker as ticker
 
 
 #read in cycle 3 TOI list containing star info
@@ -13,7 +15,7 @@ toi_list = pd.read_csv('Cycle3_TOI_List.csv', dtype=dict(GAIA=str))
 ## The lines below will need to be changed on a per-target basis ##
 ###################################################################
 
-for i in range(114,len(toi_list)):   #iterates through csv to run fit for each star
+for i in range(16,17):   #iterates through csv to run fit for each star
     word = toi_list['TOI_Number'][i]
     starname = 'TOI-'+ word.split('.')[0]    #omits everything after the period (ex. TOI-2447.01 becomes TOI-2447)
     ra = toi_list['RA'][i]
@@ -144,39 +146,108 @@ for i in range(114,len(toi_list)):   #iterates through csv to run fit for each s
 
     s.print_mags() #prints updated photometry just to check
 
+################## Manual SED Plotting ####################
+    """Plot raw photometry."""
 
-    s.estimate_logg()
+    self = s
+    
+    # Get plot ylims
+    yy=self.flux * self.wave
+    ymax = np.max(yy[np.nonzero(yy)])
+    ymin = np.min(yy[np.nonzero(yy)])
 
-    engine = 'dynesty'
-    nlive = 150
-    dlogz = 0.5
-    bound = 'multi'
-    sample = 'rwalk'
-    threads = 4
-    dynamic = False
+    f, ax = plt.subplots(figsize=(12,8))
 
-    setup = [engine, nlive, dlogz, bound, sample, threads, dynamic]
+    # Model plot
+    used_f = self.filter_names[self.filter_mask]
+    colors = np.array([
+    'tomato', 'indianred', 'tab:red',
+    'salmon', 'coral',
+    'mediumorchid', 'mediumslateblue', 'tab:blue',
+    'darkslateblue', 'darkblue',
+    'olivedrab', 'yellowgreen', 'greenyellow', 'yellow',
+    'orangered', 'chocolate', 'khaki',
+    'limegreen', 'darkgreen', 'lime', 'seagreen', 'lawngreen', 'green',
+    'aquamarine', 'turquoise', 'lightseagreen', 'teal', 'cadetblue',
+    'firebrick', 'darkred',
+    'blueviolet', 'darkviolet',
+    'midnightblue', 'blue',
+    'deeppink', 'fuchsia', 'mediumslateblue'])
+
+    zipped_data=zip(colors[self.filter_mask],self.wave[self.filter_mask], self.flux[self.filter_mask], self.flux_er[self.filter_mask],self.bandpass[self.filter_mask], used_f)
+
+    for c, w, fl, fe, bp, fi in zipped_data:    
+
+        ax.errorbar(w, fl * w,
+            xerr=bp, yerr=fe,
+            fmt='',
+            ecolor=c,
+            marker=None)
+
+        ax.scatter(w, fl * w,
+            edgecolors='black',
+            marker='o',
+            c=c,
+            s=60,
+            alpha=0.85, label=fi)
+    
+    #    print(w,fl*w)
+
+    ax.set_ylim([ymin * .8, ymax * 1.25])
+    ax.set_xscale('log', nonposx='clip')
+    ax.set_yscale('log', nonposy='clip')
+    ax.set_ylabel(r'$\lambda$F$_\lambda$ (erg cm$^{-2}$s$^{-1}$)',
+        fontsize=26,
+        fontname='serif')
+    ax.set_xlabel(r'Wavelength ($\mu$m)',
+        fontsize=26,
+        fontname='serif') 
+    ax.legend(loc=0)
+
+    ax.tick_params(axis='both', which='major',labelsize=22)
+    ax.set_xticks(np.linspace(1, 10, 10))
+    ax.get_xaxis().set_major_formatter(ticker.ScalarFormatter())
+    ax.set_xlim([0.1, 6])
+
+    for tick in ax.get_yticklabels():
+        tick.set_fontname('serif')
+
+    plt.savefig(out_folder +'_SED.png',bbox_inches='tight')
+
+###################### End Manual SED Plotting ########################
+
+    #s.estimate_logg()
+
+    #engine = 'dynesty'
+    #nlive = 150
+    #dlogz = 0.5
+    #bound = 'multi'
+    #sample = 'rwalk'
+    #threads = 4
+    #dynamic = False
+
+    #setup = [engine, nlive, dlogz, bound, sample, threads, dynamic]
 
     # Feel free to uncomment any unneeded/unwanted models
-    models = ['phoenix','btsettl','btnextgen','btcond','kurucz','ck04']
+    #models = ['phoenix','btsettl','btnextgen','btcond','kurucz','ck04']
 
-    f = Fitter()
-    f.star = s
-    f.setup = setup
-    f.av_law = 'fitzpatrick'
-    f.out_folder = out_folder
-    f.bma = True
-    f.models = models
-    f.n_samples = 100000
+    #f = Fitter()
+    #f.star = s
+    #f.setup = setup
+    #f.av_law = 'fitzpatrick'
+    #f.out_folder = out_folder
+    #f.bma = True
+    #f.models = models
+    #f.n_samples = 100000
 
-    f.prior_setup = my_dict
+    #f.prior_setup = my_dict
 
-    f.initialize()
-    f.fit_bma()
+    #f.initialize()
+    #f.fit_bma()
 
-    artist = SEDPlotter(in_file, plots_out_folder)
+    #artist = SEDPlotter(in_file, plots_out_folder)
 
-    artist.plot_SED_no_model()
-    artist.plot_bma_hist()
-    artist.plot_bma_HR(10)
-    artist.plot_corner()
+    #artist.plot_SED_no_model()
+    #artist.plot_bma_hist()
+    #artist.plot_bma_HR(10)
+    #artist.plot_corner()
