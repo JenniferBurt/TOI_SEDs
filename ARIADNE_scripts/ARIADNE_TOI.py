@@ -15,7 +15,7 @@ toi_list = pd.read_csv('Cycle3_TOI_List.csv', dtype=dict(GAIA=str))
 ## The lines below will need to be changed on a per-target basis ##
 ###################################################################
 
-for i in range(16,17):   #iterates through csv to run fit for each star
+for i in range(110,115):   #iterates through csv to run fit for each star
     word = toi_list['TOI_Number'][i]
     starname = 'TOI-'+ word.split('.')[0]    #omits everything after the period (ex. TOI-2447.01 becomes TOI-2447)
     ra = toi_list['RA'][i]
@@ -212,7 +212,8 @@ for i in range(16,17):   #iterates through csv to run fit for each star
     for tick in ax.get_yticklabels():
         tick.set_fontname('serif')
 
-    plt.savefig(out_folder +'_SED.png',bbox_inches='tight')
+    plt.savefig(out_folder +'/'+starname+'_SED.png',bbox_inches='tight')
+    plt.savefig('../ARIADNE_FitResults/ProblemStarSEDs/'+starname+'_SED.png',bbox_inches='tight')
 
 ###################### End Manual SED Plotting ########################
 
