@@ -15,7 +15,7 @@ toi_list = pd.read_csv('Cycle3_TOI_List.csv', dtype=dict(GAIA=str))
 ## The lines below will need to be changed on a per-target basis ##
 ###################################################################
 
-for i in range(110,115):   #iterates through csv to run fit for each star
+for i in range(114,115):   #iterates through csv to run fit for each star
     word = toi_list['TOI_Number'][i]
     starname = 'TOI-'+ word.split('.')[0]    #omits everything after the period (ex. TOI-2447.01 becomes TOI-2447)
     ra = toi_list['RA'][i]
@@ -79,6 +79,18 @@ for i in range(110,115):   #iterates through csv to run fit for each star
     s.remove_mag('TESS')
     s.remove_mag('GALEX_NUV')
     s.remove_mag('GALEX_FUV')
+    
+    s.remove_mag('GROUND_JOHNSON_U')
+    s.remove_mag('SDSS_g')
+    s.remove_mag('SDSS_i')
+    s.remove_mag('SDSS_r')
+    #s.remove_mag('WISE_RSR_W1')
+    #s.remove_mag('WISE_RSR_W2')
+    s.remove_mag('PS1_g')
+    s.remove_mag('PS1_i')
+    s.remove_mag('PS1_r')
+    s.remove_mag('PS1_y')
+    s.remove_mag('PS1_z')
 
     g_corrected = None
     bp_corrected = None
@@ -191,7 +203,7 @@ for i in range(110,115):   #iterates through csv to run fit for each star
             s=60,
             alpha=0.85, label=fi)
     
-    #    print(w,fl*w)
+       # print(w,fl*w)
 
     ax.set_ylim([ymin * .8, ymax * 1.25])
     ax.set_xscale('log', nonposx='clip')
@@ -212,43 +224,43 @@ for i in range(110,115):   #iterates through csv to run fit for each star
     for tick in ax.get_yticklabels():
         tick.set_fontname('serif')
 
-    plt.savefig(out_folder +'/'+starname+'_SED.png',bbox_inches='tight')
-    plt.savefig('../ARIADNE_FitResults/ProblemStarSEDs/'+starname+'_SED.png',bbox_inches='tight')
+    plt.savefig(out_folder +'/'+starname+'_SED_cleaned.png',bbox_inches='tight')
+    plt.savefig('../ARIADNE_FitResults/ProblemStarSEDs/'+starname+'_SED_cleaned.png',bbox_inches='tight')
 
 ###################### End Manual SED Plotting ########################
 
-    #s.estimate_logg()
+    s.estimate_logg()
 
-    #engine = 'dynesty'
-    #nlive = 150
-    #dlogz = 0.5
-    #bound = 'multi'
-    #sample = 'rwalk'
-    #threads = 4
-    #dynamic = False
+    engine = 'dynesty'
+    nlive = 150
+    dlogz = 0.5
+    bound = 'multi'
+    sample = 'rwalk'
+    threads = 4
+    dynamic = False
 
-    #setup = [engine, nlive, dlogz, bound, sample, threads, dynamic]
+    setup = [engine, nlive, dlogz, bound, sample, threads, dynamic]
 
     # Feel free to uncomment any unneeded/unwanted models
-    #models = ['phoenix','btsettl','btnextgen','btcond','kurucz','ck04']
+    models = ['phoenix','btsettl','btnextgen','btcond','kurucz','ck04']
 
-    #f = Fitter()
-    #f.star = s
-    #f.setup = setup
-    #f.av_law = 'fitzpatrick'
-    #f.out_folder = out_folder
-    #f.bma = True
-    #f.models = models
-    #f.n_samples = 100000
+    f = Fitter()
+    f.star = s
+    f.setup = setup
+    f.av_law = 'fitzpatrick'
+    f.out_folder = out_folder
+    f.bma = True
+    f.models = models
+    f.n_samples = 100000
 
-    #f.prior_setup = my_dict
+    f.prior_setup = my_dict
 
-    #f.initialize()
-    #f.fit_bma()
+    f.initialize()
+    f.fit_bma()
 
-    #artist = SEDPlotter(in_file, plots_out_folder)
+    artist = SEDPlotter(in_file, plots_out_folder)
 
-    #artist.plot_SED_no_model()
-    #artist.plot_bma_hist()
-    #artist.plot_bma_HR(10)
-    #artist.plot_corner()
+    artist.plot_SED_no_model()
+    artist.plot_bma_hist()
+    artist.plot_bma_HR(10)
+    artist.plot_corner()
