@@ -64,7 +64,7 @@ for m in range(len(toi_list)):
             TOI_name = TOI_sg4_values['TOI'][i]
             rstar_old = TOI_sg4_values['Rstar_TIC8'][i]
             Rp_old = TOI_sg4_values['Rplanet'][i]
-            Rp_old_e = full_toi_list[full_toi_list['TOI']==TOI_name]['Planet Radius (R_Earth) err']
+            Rp_old_e = full_toi_list[full_toi_list['TOI']==TOI_name]['Planet Radius (R_Earth) err'].item()
             depth = full_toi_list[full_toi_list['TOI']==TOI_name]['Depth (ppm)'].item()
             depth_e = full_toi_list[full_toi_list['TOI']==TOI_name]['Depth (ppm) err'].item()
             mstar_old = TOI_sg4_values['Mstar_TIC8'][i]
@@ -350,10 +350,17 @@ ax2.set_ylabel('New Radius - Old Radius',size=16)
 ax2.tick_params(axis='both', which='major', labelsize=16)
 fig.savefig('../TargetListOverview/PlanetParameterResults/planet_radius_diff_ratio_plot', dpi=300)
 
-print('new errors=',df['Rplanet_new_e'])
-print('old errors=',df['Rplanet_old_e'])
+#print('new errors=',df['Rplanet_new_e'])
+#print('old errors=',df['Rplanet_old_e'])
 
 #print('median teff error (old)=', np.median(teff_e_old),df.loc[df['teff_e_old']==np.median(teff_e_old),'TOI Number'])
 #print('median teff error (new)=', np.median(teff_e_new),df.loc[df['teff_e_new']==np.median(teff_e_new),'TOI Number'])
 #print('median radius error (old)=', np.median(rstar_e_old),df.loc[df['rstar_e_old']==np.median(rstar_e_old),'TOI Number'])
 #print('median radius error (new)=', np.median(rstar_e_new),df.loc[df['rstar_e_new']==np.median(rstar_e_new),'TOI Number'])
+
+#############################################
+########## Saving DataFrame to csv ##########
+#############################################
+del df['RadDiff'] #delete unnecessary column (only needed for plot)
+
+df.to_csv('../TargetListOverview/PlanetParameterResults/PlanetParameterResults.csv')
